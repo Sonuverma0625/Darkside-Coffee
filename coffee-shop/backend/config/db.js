@@ -8,16 +8,25 @@ const normalizeMongoUri = (value = '') => {
   return stripWrappingQuotes((prefixedValue ? prefixedValue[1] : trimmed).trim());
 };
 
+const createMongoUriError = (message, code) => {
+  const error = new Error(message);
+  error.code = code;
+  return error;
+};
+
 const connectDB = async () => {
   try {
     const mongoUri = normalizeMongoUri(process.env.MONGODB_URI || process.env.MONGO_URI);
 
     if (!mongoUri) {
-      throw new Error('MONGODB_URI is missing from environment variables');
+      throw createMongoUriError('MONGODB_URI is missing from environment variables', 'MONGODB_URI_MISSING');
     }
 
-    if (!/^mongodb(\+srv)?:\/\//i.test(mongoUri)) {
-      throw new Error('MONGODB_URI must start with mongodb:// or mongodb+srv://. Check the value in Render Environment Variables.');
+    if (!/^mongodb(\+srv)?:\/\/[^/\s]+/i.test(mongoUri)) {
+      throw createMongoUriError(
+        'MONGODB_URI must be a complete MongoDB URL like mongodb+srv://user:password@cluster.mongodb.net/coffee_shop',
+        'MONGODB_URI_INVALID'
+      );
     }
 
     const conn = await mongoose.connect(mongoUri, {

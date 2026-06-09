@@ -188,6 +188,11 @@ const seed = async () => {
 };
 
 seed().catch((error) => {
+  if (['MONGODB_URI_MISSING', 'MONGODB_URI_INVALID'].includes(error.code)) {
+    console.warn(`Skipping MongoDB seed: ${error.message}`);
+    process.exit(0);
+  }
+
   console.error(error);
   process.exit(1);
 });

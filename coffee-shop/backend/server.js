@@ -90,11 +90,16 @@ const startServer = async () => {
     await connectDB();
     mountMongoRoutes();
   } catch (error) {
-    if (process.env.NODE_ENV === 'production' || process.env.DISABLE_DEV_FALLBACK === 'true') {
+    const canUseFallback =
+      process.env.ENABLE_FILE_FALLBACK === 'true' ||
+      ['MONGODB_URI_MISSING', 'MONGODB_URI_INVALID'].includes(error.code) ||
+      (process.env.NODE_ENV !== 'production' && process.env.DISABLE_DEV_FALLBACK !== 'true');
+
+    if (!canUseFallback) {
       throw error;
     }
 
-    console.warn('MongoDB unavailable. Starting development fallback API.');
+    console.warn('MongoDB unavailable. Starting file fallback API.');
     app.use('/api', createDevFallbackRouter());
   }
 
