@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Premium coffee shop with online ordering, reviews, and fresh roasted coffee." />
+    <title>Darkside Coffee | Premium Coffee Shop</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body data-page="home">
+    <div class="loader" id="pageLoader" aria-label="Loading">
+      <div class="loader-cup"></div>
+    </div>
+
+    <header class="site-header">
+      <nav class="navbar container" aria-label="Main navigation">
+        <a class="brand" href="index.html">
+          <img src="images/logo.png" alt="Darkside Coffee logo" />
+          <span>Darkside Coffee</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-links" id="primaryNav">
+          <a href="index.html" class="active">Home</a>
+          <a href="about.html">About</a>
+          <a href="menu.html">Menu</a>
+          <a href="review.html">Review</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+          <a href="admin.html" data-admin-link>Admin</a>
+        </div>
+        <div class="nav-actions">
+          <button class="text-button js-open-auth" type="button" data-mode="login">Login</button>
+          <button class="cart-button js-cart-button" type="button">Cart <span id="cartCount">0</span></button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero hero-home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content container reveal">
+          <p class="eyebrow">Fresh roast. Honest craft.</p>
+          <h1>Darkside Coffee</h1>
+          <p class="hero-copy">Start your day with a cup built for depth, warmth, and a little ceremony.</p>
+          <div class="hero-actions">
+            <a class="primary-button" href="menu.html">Order coffee</a>
+            <a class="ghost-button" href="about.html">Our story</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section intro-band">
+        <div class="container split-layout">
+          <div class="reveal">
+            <p class="eyebrow dark">Signature menu</p>
+            <h2>Small batch coffee with a polished cafe experience.</h2>
+          </div>
+          <div class="metric-grid reveal">
+            <article>
+              <strong>18h</strong>
+              <span>cold brew steep</span>
+            </article>
+            <article>
+              <strong>4.8</strong>
+              <span>average rating</span>
+            </article>
+            <article>
+              <strong>7</strong>
+              <span>coffee categories</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container section-heading reveal">
+          <p class="eyebrow dark">Customer favorites</p>
+          <h2>Featured coffees</h2>
+          <a href="menu.html" class="inline-link">View full menu</a>
+        </div>
+        <div class="container product-grid" id="featuredProducts" data-featured="true"></div>
+      </section>
+
+      <section class="section contrast-section">
+        <div class="container split-layout">
+          <div class="reveal">
+            <p class="eyebrow">Roasted with intent</p>
+            <h2>Balanced profiles for espresso, milk drinks, and slow mornings.</h2>
+          </div>
+          <div class="feature-list reveal">
+            <article>
+              <h3>Traceable beans</h3>
+              <p>Seasonal lots are selected for sweetness, clarity, and a stable roast curve.</p>
+            </article>
+            <article>
+              <h3>Fast checkout</h3>
+              <p>Add your favorites, confirm your cart, and place an order from any device.</p>
+            </article>
+            <article>
+              <h3>Real reviews</h3>
+              <p>Customers can leave ratings so the menu gets more useful over time.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container section-heading reveal">
+          <p class="eyebrow dark">Fresh notes</p>
+          <h2>From the journal</h2>
+          <a href="blog.html" class="inline-link">Read more</a>
+        </div>
+        <div class="container blog-grid">
+          <article class="blog-card reveal">
+            <span>Brewing</span>
+            <h3>How grind size changes sweetness in espresso</h3>
+            <p>A practical guide to dialing in a richer, cleaner shot at home.</p>
+          </article>
+          <article class="blog-card reveal">
+            <span>Origin</span>
+            <h3>Why altitude matters in specialty coffee</h3>
+            <p>Density, acidity, and aroma all start before the roast begins.</p>
+          </article>
+          <article class="blog-card reveal">
+            <span>Shop</span>
+            <h3>Building a better morning coffee bar</h3>
+            <p>Simple tools that make a daily ritual feel beautifully repeatable.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="newsletter-section">
+        <div class="container newsletter-inner reveal">
+          <div>
+            <p class="eyebrow">Newsletter</p>
+            <h2>Roast drops, cafe notes, and seasonal offers.</h2>
+          </div>
+          <form class="newsletter-form">
+            <input type="email" name="email" placeholder="Email address" required />
+            <button class="primary-button" type="submit">Subscribe</button>
+            <p class="form-message" data-newsletter-message></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand footer-brand" href="index.html">
+            <img src="images/logo.png" alt="Darkside Coffee logo" />
+            <span>Darkside Coffee</span>
+          </a>
+          <p>Premium coffee, fresh roasted and ready for pickup or delivery.</p>
+        </div>
+        <div>
+          <h3>Visit</h3>
+          <p>42 Roast Avenue<br />Bengaluru, India</p>
+        </div>
+        <div>
+          <h3>Contact</h3>
+          <p>+91 98765 43210<br />hello@darksidecoffee.test</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="modal" id="authModal" aria-hidden="true">
+      <div class="modal-panel auth-panel">
+        <button class="modal-close" type="button" data-close-auth aria-label="Close login">&times;</button>
+        <div class="auth-tabs">
+          <button type="button" class="active" data-auth-tab="login">Login</button>
+          <button type="button" data-auth-tab="register">Signup</button>
+          <button type="button" data-auth-tab="forgot">Forgot</button>
+        </div>
+        <form class="auth-form active" id="loginForm" data-auth-panel="login">
+          <label>Email<input type="email" name="email" required /></label>
+          <label>Password<input type="password" name="password" required /></label>
+          <button class="primary-button" type="submit">Login</button>
+        </form>
+        <form class="auth-form" id="registerForm" data-auth-panel="register">
+          <label>Name<input type="text" name="name" required minlength="2" /></label>
+          <label>Email<input type="email" name="email" required /></label>
+          <label>Password<input type="password" name="password" required minlength="8" /></label>
+          <button class="primary-button" type="submit">Create account</button>
+        </form>
+        <form class="auth-form" id="forgotForm" data-auth-panel="forgot">
+          <label>Email<input type="email" name="email" required /></label>
+          <button class="primary-button" type="submit">Send reset token</button>
+        </form>
+        <p class="form-message" id="authMessage"></p>
+      </div>
+    </div>
+
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+      <div class="drawer-header">
+        <h2>Your cart</h2>
+        <button type="button" class="modal-close js-cart-close" aria-label="Close cart">&times;</button>
+      </div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-summary">
+        <div><span>Total</span><strong id="cartTotal">$0.00</strong></div>
+        <form id="checkoutForm">
+          <input type="text" name="street" placeholder="Street address" required />
+          <input type="text" name="city" placeholder="City" required />
+          <input type="text" name="phone" placeholder="Phone" />
+          <button class="primary-button" type="submit">Checkout</button>
+        </form>
+        <p class="form-message" id="cartMessage"></p>
+      </div>
+    </aside>
+    <div class="cart-backdrop" id="cartBackdrop"></div>
+
+    <div class="modal" id="productModal" aria-hidden="true">
+      <div class="modal-panel product-modal-panel" id="productModalContent"></div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

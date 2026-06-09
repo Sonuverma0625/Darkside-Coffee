@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu | Darkside Coffee</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body data-page="menu">
+    <div class="loader" id="pageLoader"><div class="loader-cup"></div></div>
+    <header class="site-header">
+      <nav class="navbar container" aria-label="Main navigation">
+        <a class="brand" href="index.html"><img src="images/logo.png" alt="Darkside Coffee logo" /><span>Darkside Coffee</span></a>
+        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+        <div class="nav-links" id="primaryNav">
+          <a href="index.html">Home</a><a href="about.html">About</a><a href="menu.html" class="active">Menu</a><a href="review.html">Review</a><a href="blog.html">Blog</a><a href="contact.html">Contact</a><a href="admin.html" data-admin-link>Admin</a>
+        </div>
+        <div class="nav-actions"><button class="text-button js-open-auth" type="button" data-mode="login">Login</button><button class="cart-button js-cart-button" type="button">Cart <span id="cartCount">0</span></button></div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-hero compact-hero">
+        <div class="container reveal">
+          <p class="eyebrow">Coffee menu</p>
+          <h1>Browse, filter, and add your next cup to cart.</h1>
+        </div>
+      </section>
+
+      <section class="section menu-section">
+        <div class="container menu-toolbar reveal">
+          <label class="search-field">Search<input type="search" id="productSearch" placeholder="Espresso, latte, beans..." /></label>
+          <label>Department
+            <select id="departmentFilter">
+              <option value="all">All</option>
+              <option value="Coffee">Coffee</option>
+              <option value="Non-Coffee Drinks">Non-Coffee Drinks</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Snacks">Snacks</option>
+            </select>
+          </label>
+          <label>Category
+            <select id="categoryFilter">
+              <option value="all">All</option>
+            </select>
+          </label>
+          <label>Badge
+            <select id="badgeFilter">
+              <option value="all">All</option>
+              <option value="popular">Popular</option>
+              <option value="bestseller">Bestseller</option>
+              <option value="new">New Arrival</option>
+            </select>
+          </label>
+          <label>Max price<input type="range" id="priceFilter" min="4" max="25" value="25" /><span id="priceValue">$25</span></label>
+        </div>
+        <div class="container product-grid" id="menuProducts"></div>
+        <p class="container empty-state" id="menuEmpty" hidden>No coffees match those filters.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div><a class="brand footer-brand" href="index.html"><img src="images/logo.png" alt="Darkside Coffee logo" /><span>Darkside Coffee</span></a><p>Premium coffee, fresh roasted and ready for pickup or delivery.</p></div>
+        <div><h3>Visit</h3><p>42 Roast Avenue<br />Bengaluru, India</p></div>
+        <div><h3>Contact</h3><p>+91 98765 43210<br />hello@darksidecoffee.test</p></div>
+      </div>
+    </footer>
+
+    <div class="modal" id="authModal" aria-hidden="true"><div class="modal-panel auth-panel"><button class="modal-close" type="button" data-close-auth aria-label="Close login">&times;</button><div class="auth-tabs"><button type="button" class="active" data-auth-tab="login">Login</button><button type="button" data-auth-tab="register">Signup</button><button type="button" data-auth-tab="forgot">Forgot</button></div><form class="auth-form active" id="loginForm" data-auth-panel="login"><label>Email<input type="email" name="email" required /></label><label>Password<input type="password" name="password" required /></label><button class="primary-button" type="submit">Login</button></form><form class="auth-form" id="registerForm" data-auth-panel="register"><label>Name<input type="text" name="name" required minlength="2" /></label><label>Email<input type="email" name="email" required /></label><label>Password<input type="password" name="password" required minlength="8" /></label><button class="primary-button" type="submit">Create account</button></form><form class="auth-form" id="forgotForm" data-auth-panel="forgot"><label>Email<input type="email" name="email" required /></label><button class="primary-button" type="submit">Send reset token</button></form><p class="form-message" id="authMessage"></p></div></div>
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true"><div class="drawer-header"><h2>Your cart</h2><button type="button" class="modal-close js-cart-close" aria-label="Close cart">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-summary"><div><span>Total</span><strong id="cartTotal">$0.00</strong></div><form id="checkoutForm"><input type="text" name="street" placeholder="Street address" required /><input type="text" name="city" placeholder="City" required /><input type="text" name="phone" placeholder="Phone" /><button class="primary-button" type="submit">Checkout</button></form><p class="form-message" id="cartMessage"></p></div></aside><div class="cart-backdrop" id="cartBackdrop"></div>
+    <div class="modal" id="productModal" aria-hidden="true"><div class="modal-panel product-modal-panel" id="productModalContent"></div></div>
+    <script src="js/auth.js"></script><script src="js/cart.js"></script><script src="js/script.js"></script>
+  </body>
+</html>

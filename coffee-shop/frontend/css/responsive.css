@@ -1,0 +1,184 @@
+@media (max-width: 1060px) {
+  .navbar {
+    grid-template-columns: auto auto auto;
+  }
+
+  .menu-toggle {
+    display: block;
+    justify-self: end;
+  }
+
+  .nav-links {
+    background: var(--ink);
+    border-top: 1px solid rgba(255, 250, 242, 0.12);
+    display: none;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: start;
+    padding: 18px 0;
+  }
+
+  .nav-links.open {
+    display: grid;
+  }
+
+  .nav-actions {
+    justify-self: end;
+  }
+
+  .hero h1 {
+    font-size: 4rem;
+  }
+
+  .product-grid,
+  .review-grid,
+  .values-grid,
+  .timeline,
+  .blog-grid,
+  .blog-grid.large {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    width: min(calc(100% - 28px), var(--container));
+  }
+
+  .navbar {
+    gap: 12px;
+    min-height: 70px;
+  }
+
+  .brand span {
+    font-size: 0.94rem;
+  }
+
+  .brand img {
+    height: 38px;
+    width: 38px;
+  }
+
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .text-button,
+  .cart-button,
+  .primary-button,
+  .ghost-button {
+    min-height: 42px;
+    padding: 10px 12px;
+  }
+
+  .nav-links {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    min-height: 82vh;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  .hero-copy {
+    font-size: 1.05rem;
+  }
+
+  .section,
+  .newsletter-section {
+    padding: 60px 0;
+  }
+
+  .page-hero {
+    padding: 86px 0 62px;
+  }
+
+  .section h2,
+  .page-hero h1 {
+    font-size: 2.1rem;
+  }
+
+  .split-layout,
+  .newsletter-inner,
+  .review-layout,
+  .contact-layout,
+  .menu-toolbar,
+  .product-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .metric-grid,
+  .product-grid,
+  .review-grid,
+  .values-grid,
+  .timeline,
+  .blog-grid,
+  .blog-grid.large,
+  .stats-grid,
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .customization-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rating-summary span:first-child {
+    font-size: 4rem;
+  }
+
+  .cart-drawer {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    grid-template-columns: auto auto;
+  }
+
+  .nav-actions {
+    grid-column: 1 / -1;
+    justify-content: stretch;
+  }
+
+  .nav-actions > * {
+    flex: 1;
+  }
+
+  .hero h1 {
+    font-size: 2.55rem;
+  }
+
+  .hero-actions {
+    display: grid;
+  }
+
+  .auth-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-panel {
+    padding: 22px;
+  }
+}

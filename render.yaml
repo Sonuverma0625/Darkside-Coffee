@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: darkside-coffee
+    runtime: node
+    rootDir: coffee-shop/backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run seed && npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DISABLE_DEV_FALLBACK
+        value: "true"
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: MONGODB_URI
+        sync: false
+      - key: ADMIN_NAME
+        value: Coffee Admin
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

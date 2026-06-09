@@ -1,0 +1,14 @@
+node_modules/
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+*.log
+.env
+
+coffee-shop/backend/.env
+coffee-shop/backend/data/
+coffee-shop/backend/server.out.log
+coffee-shop/backend/server.err.log
+coffee-shop/backend/uploads/*
+!coffee-shop/backend/uploads/.gitkeep

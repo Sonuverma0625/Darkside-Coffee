@@ -1,0 +1,15 @@
+{
+  "name": "darkside-coffee",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full stack coffee shop application",
+  "scripts": {
+    "build": "npm install --prefix backend",
+    "start": "npm start --prefix backend",
+    "dev": "npm run dev --prefix backend",
+    "seed": "npm run seed --prefix backend"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
