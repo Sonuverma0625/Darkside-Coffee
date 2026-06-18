@@ -100,13 +100,13 @@ const customizationFor = (department, name) => {
 
 const priceFor = (department, index) => {
   const base = {
-    Coffee: 4.25,
-    'Non-Coffee Drinks': 3.75,
-    Bakery: 3.5,
-    Snacks: 4.75
+    Coffee: 149,
+    'Non-Coffee Drinks': 129,
+    Bakery: 99,
+    Snacks: 159
   }[department];
 
-  return Number((base + (index % 8) * 0.45).toFixed(2));
+  return base + (index % 8) * 20;
 };
 
 const buildProducts = () => {

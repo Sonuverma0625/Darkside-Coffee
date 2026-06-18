@@ -72,8 +72,32 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['COD', 'Card', 'UPI', 'Wallet'],
+      enum: ['COD', 'Card', 'UPI', 'QR', 'Wallet'],
       default: 'COD'
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['Pending', 'Verification Pending', 'Paid', 'Failed', 'Refunded'],
+      default: 'Pending'
+    },
+    transactionId: {
+      type: String,
+      trim: true,
+      maxlength: 100,
+      default: ''
+    },
+    paymentConfirmedAt: {
+      type: Date
+    },
+    currency: {
+      type: String,
+      enum: ['INR'],
+      default: 'INR'
+    },
+    customer: {
+      name: { type: String, trim: true, default: '' },
+      email: { type: String, trim: true, lowercase: true, default: '' },
+      phone: { type: String, trim: true, default: '' }
     },
     shippingAddress: {
       street: { type: String, trim: true, default: '' },

@@ -47,6 +47,8 @@ MONGODB_URI=<your MongoDB Atlas connection string>
 JWT_SECRET=<long random secret>
 ADMIN_EMAIL=admin@coffee.test
 ADMIN_PASSWORD=Admin@12345
+UPI_ID=yourupiid@upi
+UPI_PAYEE_NAME=Darkside Coffee
 ```
 
 The blueprint sets:
@@ -79,6 +81,8 @@ JWT_EXPIRES_IN=7d
 ADMIN_NAME=Coffee Admin
 ADMIN_EMAIL=admin@coffee.test
 ADMIN_PASSWORD=Admin@12345
+UPI_ID=yourupiid@upi
+UPI_PAYEE_NAME=Darkside Coffee
 ```
 
 ## 5. Open The App
@@ -109,3 +113,5 @@ Change the admin password after first deploy.
 - Do not deploy with the local development fallback as your database.
 - Product image uploads are saved to the Render instance filesystem. On free services this is not durable storage. For production image uploads, use Cloudinary, S3, or another object storage service.
 - First request on Render free services can be slow because the service may spin down when idle.
+- Replace `yourupiid@upi` with the receiving merchant UPI ID before accepting payments.
+- UPI and QR orders are stored as `Verification Pending` after the customer clicks "I have paid". Connect a payment gateway webhook before automatically marking these orders as paid.

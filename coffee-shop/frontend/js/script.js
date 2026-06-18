@@ -23,8 +23,8 @@
 
   const fallbackProducts = allCategories.map((category, index) => {
     const department = departmentForCategory(category);
-    const basePrice = department === 'Coffee' ? 4.25 : department === 'Non-Coffee Drinks' ? 3.75 : department === 'Bakery' ? 3.5 : 4.75;
-    const price = Number((basePrice + (index % 8) * 0.45).toFixed(2));
+    const basePrice = department === 'Coffee' ? 149 : department === 'Non-Coffee Drinks' ? 129 : department === 'Bakery' ? 99 : 159;
+    const price = basePrice + (index % 8) * 20;
 
     return {
       id: `sample-${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
@@ -70,7 +70,7 @@
     }[char]));
 
   const formatCurrency = (amount) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(amount) || 0);
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(Number(amount) || 0);
 
   const imageUrl = (image) => {
     if (!image) return 'images/header-bg.jpg';
@@ -283,7 +283,7 @@
         const selectedDepartment = department?.value || 'all';
         const selectedCategory = category?.value || 'all';
         const selectedBadge = badge?.value || 'all';
-        const maxPrice = Number(price?.value || 25);
+        const maxPrice = Number(price?.value || 350);
         if (priceValue) priceValue.textContent = formatCurrency(maxPrice);
 
         const filtered = products.filter((product) => {
@@ -486,6 +486,7 @@
           <tr>
             <td><strong>${escapeHtml(order.user?.name || 'Customer')}</strong><br /><small>${formatDate(order.createdAt)}</small></td>
             <td>${formatCurrency(order.totalPrice)}</td>
+            <td><strong>${escapeHtml(order.paymentMethod || 'COD')}</strong><br /><small>${escapeHtml(order.paymentStatus || 'Pending')}</small></td>
             <td>
               <select data-order-status="${order._id}">
                 ${['pending', 'paid', 'preparing', 'shipped', 'delivered', 'cancelled']

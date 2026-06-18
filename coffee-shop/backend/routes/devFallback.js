@@ -5,6 +5,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const upload = require('../middleware/upload');
+const { PAYMENT_METHODS, createUpiPayment } = require('../config/payment');
 const {
   COFFEE_CATEGORIES,
   NON_COFFEE_CATEGORIES,
@@ -50,8 +51,8 @@ const buildProducts = () => {
 
   return categories.map((category, index) => {
     const department = getDepartmentForCategory(category);
-    const basePrice = department === 'Coffee' ? 4.25 : department === 'Non-Coffee Drinks' ? 3.75 : department === 'Bakery' ? 3.5 : 4.75;
-    const price = Number((basePrice + (index % 8) * 0.45).toFixed(2));
+    const basePrice = department === 'Coffee' ? 149 : department === 'Non-Coffee Drinks' ? 129 : department === 'Bakery' ? 99 : 159;
+    const price = basePrice + (index % 8) * 20;
     const image = 'images/header-bg.jpg';
 
     return {
@@ -125,6 +126,59 @@ const ensureAdmin = (db) => {
     updatedAt: now()
   });
   saveDb(db);
+};
+
+const checkoutError = (message, statusCode = 422) => {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+};
+
+const buildFallbackOrderPreview = (db, body, user) => {
+  const items = body.products || [];
+  const customerName = String(body.customerName || '').trim();
+  const customerEmail = String(body.customerEmail || '').trim().toLowerCase();
+  const contactPhone = String(body.contactPhone || '').trim();
+  const address = body.shippingAddress || {};
+
+  if (!Array.isArray(items) || items.length === 0) throw checkoutError('Order products are required');
+  if (customerName.length < 2) throw checkoutError('Customer name is required');
+  if (customerEmail !== String(user.email).toLowerCase()) throw checkoutError('Customer email must match the signed-in account');
+  if (!/^[+]?[\d\s()-]{7,20}$/.test(contactPhone)) throw checkoutError('Valid phone number is required');
+  if (String(address.street || '').trim().length < 5) throw checkoutError('Street address is required');
+  if (String(address.city || '').trim().length < 2) throw checkoutError('City is required');
+  if (String(address.state || '').trim().length < 2) throw checkoutError('State is required');
+  if (!/^\d{6}$/.test(String(address.zip || '').trim())) throw checkoutError('Valid 6 digit PIN code is required');
+
+  const products = items.map((item) => {
+    const product = db.products.find((entry) => entry._id === item.product && entry.isActive !== false);
+    const quantity = Number(item.quantity);
+    if (!product) throw checkoutError('One or more products are unavailable');
+    if (!Number.isInteger(quantity) || quantity < 1) throw checkoutError('Quantity must be at least 1');
+    if (product.stock < quantity) throw checkoutError(`${product.title} does not have enough stock`);
+    return {
+      product: product._id,
+      title: product.title,
+      quantity,
+      price: product.discountPrice || product.price,
+      image: product.image,
+      customization: item.customization || {}
+    };
+  });
+
+  return {
+    customer: { name: customerName, email: user.email, phone: contactPhone },
+    shippingAddress: {
+      street: String(address.street || '').trim(),
+      city: String(address.city || '').trim(),
+      state: String(address.state || '').trim(),
+      zip: String(address.zip || '').trim(),
+      country: String(address.country || 'India').trim()
+    },
+    products,
+    totalPrice: Number(products.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)),
+    currency: 'INR'
+  };
 };
 
 const createDevFallbackRouter = () => {
@@ -330,36 +384,54 @@ const createDevFallbackRouter = () => {
     res.json({ success: true, message: 'Product deleted successfully' });
   });
 
+  router.post('/orders/preview', protect, async (req, res) => {
+    try {
+      const preview = buildFallbackOrderPreview(db, req.body, req.user);
+      const payment = await createUpiPayment(preview.totalPrice);
+      res.json({ success: true, preview, payment });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ success: false, message: error.message });
+    }
+  });
+
   router.post('/orders', protect, (req, res) => {
-    const items = req.body.products || [];
-    const products = items.map((item) => {
-      const product = db.products.find((entry) => entry._id === item.product);
-      if (!product) return null;
-      return {
-        product: product._id,
-        title: product.title,
-        quantity: Number(item.quantity || 1),
-        price: product.discountPrice || product.price,
-        image: product.image,
-        customization: item.customization || {}
+    try {
+      const preview = buildFallbackOrderPreview(db, req.body, req.user);
+      const paymentMethod = req.body.paymentMethod;
+      const isDigitalPayment = paymentMethod === 'UPI' || paymentMethod === 'QR';
+
+      if (!PAYMENT_METHODS.includes(paymentMethod)) throw checkoutError('Select a valid payment method');
+      if (isDigitalPayment && req.body.paymentConfirmed !== true) {
+        throw checkoutError('Confirm the UPI or QR payment before placing the order');
+      }
+
+      const transactionId = String(req.body.transactionId || '').trim();
+      if (transactionId.length > 100) throw checkoutError('Reference ID is too long');
+
+      const order = {
+        _id: newId(),
+        user: req.user._id,
+        ...preview,
+        status: 'pending',
+        paymentMethod,
+        paymentStatus: isDigitalPayment ? 'Verification Pending' : 'Pending',
+        transactionId: isDigitalPayment ? transactionId : '',
+        paymentConfirmedAt: isDigitalPayment ? now() : undefined,
+        contactPhone: preview.customer.phone,
+        createdAt: now(),
+        updatedAt: now()
       };
-    }).filter(Boolean);
-    if (!products.length) return res.status(422).json({ success: false, message: 'Order products are required' });
-    const order = {
-      _id: newId(),
-      user: req.user._id,
-      products,
-      totalPrice: products.reduce((sum, item) => sum + item.price * item.quantity, 0),
-      status: 'pending',
-      paymentMethod: req.body.paymentMethod || 'COD',
-      shippingAddress: req.body.shippingAddress || {},
-      contactPhone: req.body.contactPhone || '',
-      createdAt: now(),
-      updatedAt: now()
-    };
-    db.orders.unshift(order);
-    saveDb(db);
-    res.status(201).json({ success: true, order });
+
+      preview.products.forEach((item) => {
+        const product = db.products.find((entry) => entry._id === item.product);
+        product.stock -= item.quantity;
+      });
+      db.orders.unshift(order);
+      saveDb(db);
+      res.status(201).json({ success: true, order });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ success: false, message: error.message });
+    }
   });
 
   router.get('/orders', protect, (req, res) => {

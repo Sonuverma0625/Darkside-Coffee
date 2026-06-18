@@ -114,7 +114,8 @@
   .review-layout,
   .contact-layout,
   .menu-toolbar,
-  .product-modal-grid {
+  .product-modal-grid,
+  .checkout-layout {
     grid-template-columns: 1fr;
   }
 
@@ -150,6 +151,10 @@
   .cart-drawer {
     max-width: 100%;
   }
+
+  .checkout-field-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 480px) {
@@ -180,5 +185,20 @@
 
   .modal-panel {
     padding: 22px;
+  }
+
+  .checkout-field-grid,
+  .checkout-details div {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-details div {
+    gap: 2px;
+  }
+
+  .order-review-item {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
   }
 }
