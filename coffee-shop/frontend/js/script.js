@@ -2,6 +2,7 @@
   const qs = (selector, scope = document) => scope.querySelector(selector);
   const qsa = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
   const productStore = new Map();
+  let revealObserver;
 
   const categoryGroups = {
     Coffee: ['Espresso', 'Americano', 'Cappuccino', 'Latte', 'Mocha', 'Flat White', 'Macchiato', 'Affogato', 'Cold Brew', 'Nitro Cold Brew', 'Iced Coffee', 'Iced Latte', 'Iced Mocha', 'Frappuccino', 'Vanilla Latte', 'Caramel Latte', 'Hazelnut Latte', 'Pumpkin Spice Latte', 'Irish Coffee', 'Turkish Coffee', 'Black Coffee', 'Filter Coffee', 'South Indian Filter Coffee', 'Instant Coffee', 'Chocolate Coffee', 'Honey Coffee', 'Coconut Coffee', 'Cinnamon Coffee', 'Mint Coffee', 'Signature House Blend'],
@@ -215,37 +216,151 @@
   const initNav = () => {
     const toggle = qs('.menu-toggle');
     const nav = qs('#primaryNav');
+    const header = qs('.site-header');
 
     toggle?.addEventListener('click', () => {
       const open = nav?.classList.toggle('open');
       toggle.setAttribute('aria-expanded', String(Boolean(open)));
     });
+
+    nav?.addEventListener('click', (event) => {
+      if (!event.target.closest('a') || !nav.classList.contains('open')) return;
+      nav.classList.remove('open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    });
+
+    const homeSectionLinks = document.body.dataset.page === 'home'
+      ? [
+          { element: qs('.hero-home'), href: 'index.html' },
+          { element: qs('#featuredProducts')?.closest('section'), href: 'menu.html' },
+          { element: qs('.contrast-section'), href: 'about.html' },
+          { element: qs('.blog-grid')?.closest('section'), href: 'blog.html' }
+        ].filter((item) => item.element)
+      : [];
+
+    let scrollFrame;
+    const updateHeader = () => {
+      header?.classList.toggle('scrolled', window.scrollY > 18);
+
+      const scrollRange = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+      header?.style.setProperty('--scroll-progress', String(Math.min(window.scrollY / scrollRange, 1)));
+
+      if (homeSectionLinks.length && nav) {
+        const marker = window.scrollY + window.innerHeight * 0.42;
+        const current = homeSectionLinks.reduce(
+          (active, item) => (item.element.offsetTop <= marker ? item : active),
+          homeSectionLinks[0]
+        );
+
+        qsa('a', nav).forEach((link) => link.classList.toggle('active', link.getAttribute('href') === current.href));
+      }
+
+      scrollFrame = undefined;
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (scrollFrame) return;
+        scrollFrame = window.requestAnimationFrame(updateHeader);
+      },
+      { passive: true }
+    );
+    window.addEventListener('resize', updateHeader, { passive: true });
+    updateHeader();
   };
 
   const revealNow = (scope = document) => {
-    qsa('.reveal', scope).forEach((element) => element.classList.add('visible'));
+    const elements = scope.matches?.('.reveal') ? [scope] : qsa('.reveal', scope);
+    elements.forEach((element, index) => {
+      if (element.matches('.product-card, .blog-card, .value-card, .review-card, .stat-card, .metric-grid article, .feature-list article, .timeline article')) {
+        element.classList.add('reveal-zoom');
+      }
+
+      if (!element.matches('.reveal-left, .reveal-right, .reveal-zoom') && element.parentElement?.matches('.split-layout, .review-layout, .contact-layout')) {
+        const siblingIndex = Array.from(element.parentElement.children).indexOf(element);
+        element.classList.add(siblingIndex % 2 === 0 ? 'reveal-left' : 'reveal-right');
+      }
+
+      element.style.setProperty('--reveal-delay', `${Math.min(index * 70, 280)}ms`);
+      if (revealObserver) {
+        revealObserver.observe(element);
+      } else {
+        element.classList.add('visible');
+      }
+    });
+  };
+
+  const prepareMotionElements = () => {
+    const selectors = [
+      '.split-layout > *',
+      '.review-layout > *',
+      '.contact-layout > *',
+      '.metric-grid article',
+      '.feature-list article',
+      '.values-grid > *',
+      '.timeline article',
+      '.blog-card',
+      '.review-card',
+      '.stat-card',
+      '.section-heading',
+      '.menu-toolbar',
+      '.newsletter-inner',
+      '.footer-grid'
+    ].join(', ');
+
+    qsa(selectors).forEach((element) => element.classList.add('reveal'));
   };
 
   const initReveal = () => {
-    const elements = qsa('.reveal');
     if (!('IntersectionObserver' in window)) {
       revealNow();
       return;
     }
 
-    const observer = new IntersectionObserver(
+    revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+            revealObserver.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.12 }
+      { rootMargin: '0px 0px -7% 0px', threshold: 0.1 }
     );
 
-    elements.forEach((element) => observer.observe(element));
+    revealNow();
+  };
+
+  const initHeroMotion = () => {
+    const hero = qs('.hero-home');
+    const product = qs('.hero-product', hero || document);
+    if (!hero || !product || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let motionFrame;
+    const updateMotion = () => {
+      const heroHeight = hero.offsetHeight || 1;
+      const progress = Math.min(Math.max(window.scrollY / (heroHeight * 0.82), 0), 1);
+      const cupTravel = Math.min(heroHeight * 0.92, 620);
+
+      hero.style.setProperty('--cup-y', Math.round(progress * cupTravel) + 'px');
+      hero.style.setProperty('--cup-rotate', (progress * 4.5).toFixed(2) + 'deg');
+      hero.style.setProperty('--cup-scale', (1 - progress * 0.13).toFixed(3));
+      hero.style.setProperty('--copy-y', Math.round(progress * -58) + 'px');
+      hero.style.setProperty('--copy-opacity', Math.max(1 - progress * 1.28, 0).toFixed(3));
+      hero.style.backgroundPosition = 'center calc(48% + ' + Math.round(progress * 34) + 'px)';
+      motionFrame = undefined;
+    };
+
+    const requestMotionUpdate = () => {
+      if (motionFrame) return;
+      motionFrame = window.requestAnimationFrame(updateMotion);
+    };
+
+    window.addEventListener('scroll', requestMotionUpdate, { passive: true });
+    window.addEventListener('resize', requestMotionUpdate, { passive: true });
+    updateMotion();
   };
 
   const initProductSections = async () => {
@@ -702,7 +817,9 @@
   const init = () => {
     initLoader();
     initNav();
+    prepareMotionElements();
     initReveal();
+    initHeroMotion();
     initProductSections();
     initProductDetails();
     initReviewForm();
