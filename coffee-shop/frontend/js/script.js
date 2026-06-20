@@ -4,6 +4,7 @@
   const productStore = new Map();
   let revealObserver;
 
+  // Product catalog metadata and safe rendering helpers.
   const categoryGroups = {
     Coffee: ['Espresso', 'Americano', 'Cappuccino', 'Latte', 'Mocha', 'Flat White', 'Macchiato', 'Affogato', 'Cold Brew', 'Nitro Cold Brew', 'Iced Coffee', 'Iced Latte', 'Iced Mocha', 'Frappuccino', 'Vanilla Latte', 'Caramel Latte', 'Hazelnut Latte', 'Pumpkin Spice Latte', 'Irish Coffee', 'Turkish Coffee', 'Black Coffee', 'Filter Coffee', 'South Indian Filter Coffee', 'Instant Coffee', 'Chocolate Coffee', 'Honey Coffee', 'Coconut Coffee', 'Cinnamon Coffee', 'Mint Coffee', 'Signature House Blend'],
     'Non-Coffee Drinks': ['Hot Chocolate', 'Green Tea', 'Black Tea', 'Lemon Tea', 'Masala Tea', 'Matcha Latte', 'Milkshake', 'Smoothies', 'Fresh Juice'],
@@ -209,6 +210,7 @@
     document.body.classList.remove('no-scroll');
   };
 
+  // Shared navigation, loading, and scroll motion.
   const initLoader = () => {
     window.setTimeout(() => qs('#pageLoader')?.classList.add('hidden'), 350);
   };
@@ -363,6 +365,7 @@
     updateMotion();
   };
 
+  // Product browsing, filtering, and detail interactions.
   const initProductSections = async () => {
     const featuredContainer = qs('#featuredProducts');
     const menuContainer = qs('#menuProducts');
@@ -444,6 +447,7 @@
     });
   };
 
+  // Reviews and customer-facing forms.
   const renderReviews = (reviews) => {
     const list = qs('#reviewList');
     if (!list) return;
@@ -555,6 +559,7 @@
     });
   };
 
+  // Admin dashboard rendering and actions.
   const formatDate = (value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   const renderAdminStats = (stats = {}) => {
