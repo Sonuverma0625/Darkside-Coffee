@@ -6,7 +6,7 @@
 
   // Product catalog metadata and safe rendering helpers.
   const categoryGroups = {
-    Coffee: ['Espresso', 'Americano', 'Cappuccino', 'Latte', 'Mocha', 'Flat White', 'Macchiato', 'Affogato', 'Cold Brew', 'Nitro Cold Brew', 'Iced Coffee', 'Iced Latte', 'Iced Mocha', 'Frappuccino', 'Vanilla Latte', 'Caramel Latte', 'Hazelnut Latte', 'Pumpkin Spice Latte', 'Irish Coffee', 'Turkish Coffee', 'Black Coffee', 'Filter Coffee', 'South Indian Filter Coffee', 'Instant Coffee', 'Chocolate Coffee', 'Honey Coffee', 'Coconut Coffee', 'Cinnamon Coffee', 'Mint Coffee', 'Signature House Blend'],
+    Coffee: ['Espresso', 'Americano', 'Cappuccino', 'Latte', 'Mocha', 'Flat White', 'Macchiato', 'Affogato', 'Cold Brew', 'Nitro Cold Brew', 'Iced Coffee', 'Iced Latte', 'Iced Mocha', 'Frappuccino', 'Vanilla Latte', 'Caramel Latte', 'Hazelnut Latte', 'Pumpkin Spice Latte', 'Irish Coffee', 'Turkish Coffee', 'Black Coffee', 'Filter Coffee', 'South Indian Filter Coffee', 'Instant Coffee', 'Chocolate Coffee', 'Honey Coffee', 'Coconut Coffee', 'Cinnamon Coffee', 'Mint Coffee', 'Signature House Blend', 'Cortado', 'Ristretto', 'Doppio', 'Lungo', 'Cafe au Lait', 'Piccolo Latte', 'Spanish Latte', 'Vietnamese Iced Coffee', 'Cafe Bombon', 'Espresso Tonic'],
     'Non-Coffee Drinks': ['Hot Chocolate', 'Green Tea', 'Black Tea', 'Lemon Tea', 'Masala Tea', 'Matcha Latte', 'Milkshake', 'Smoothies', 'Fresh Juice'],
     Bakery: ['Croissant', 'Chocolate Croissant', 'Garlic Bread', 'Brownie', 'Muffin', 'Donut', 'Red Velvet Cake', 'Cheesecake', 'Chocolate Cake', 'Tiramisu', 'Cookies'],
     Snacks: ['French Fries', 'Veg Sandwich', 'Grilled Sandwich', 'Club Sandwich', 'Veg Burger', 'Chicken Burger', 'Pizza', 'Pasta', 'Wrap', 'Nachos']
@@ -131,7 +131,7 @@
     const id = productId(product);
     return `
       <article class="product-card reveal">
-        <img src="${imageUrl(product.image)}" alt="${escapeHtml(product.title)}" />
+        <img src="${imageUrl(product.image)}" alt="${escapeHtml(product.title)}" loading="lazy" decoding="async" />
         <div class="product-body">
           <span class="category-pill">${escapeHtml(product.category)}</span>
           ${badgeMarkup(product)}
@@ -171,7 +171,7 @@
     content.innerHTML = `
       <button class="modal-close" type="button" data-close-product aria-label="Close details">&times;</button>
       <div class="product-modal-grid">
-        <img src="${imageUrl(product.image)}" alt="${escapeHtml(product.title)}" />
+        <img src="${imageUrl(product.image)}" alt="${escapeHtml(product.title)}" loading="lazy" decoding="async" />
         <div>
           <span class="category-pill">${escapeHtml(product.category)}</span>
           ${badgeMarkup(product)}
@@ -212,7 +212,7 @@
 
   // Shared navigation, loading, and scroll motion.
   const initLoader = () => {
-    window.setTimeout(() => qs('#pageLoader')?.classList.add('hidden'), 350);
+    window.setTimeout(() => qs('#pageLoader')?.classList.add('hidden'), 80);
   };
 
   const initNav = () => {
@@ -284,7 +284,7 @@
         element.classList.add(siblingIndex % 2 === 0 ? 'reveal-left' : 'reveal-right');
       }
 
-      element.style.setProperty('--reveal-delay', `${Math.min(index * 70, 280)}ms`);
+      element.style.setProperty('--reveal-delay', `${Math.min(index * 55, 180)}ms`);
       if (revealObserver) {
         revealObserver.observe(element);
       } else {
@@ -341,9 +341,14 @@
     if (!hero || !product || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     let motionFrame;
+    let lastProgress = -1;
     const updateMotion = () => {
       const heroHeight = hero.offsetHeight || 1;
       const progress = Math.min(Math.max(window.scrollY / (heroHeight * 0.82), 0), 1);
+      if (Math.abs(progress - lastProgress) < 0.002) {
+        motionFrame = undefined;
+        return;
+      }
       const cupTravel = Math.min(heroHeight * 0.92, 620);
 
       hero.style.setProperty('--cup-y', Math.round(progress * cupTravel) + 'px');
@@ -351,7 +356,7 @@
       hero.style.setProperty('--cup-scale', (1 - progress * 0.13).toFixed(3));
       hero.style.setProperty('--copy-y', Math.round(progress * -58) + 'px');
       hero.style.setProperty('--copy-opacity', Math.max(1 - progress * 1.28, 0).toFixed(3));
-      hero.style.backgroundPosition = 'center calc(48% + ' + Math.round(progress * 34) + 'px)';
+      lastProgress = progress;
       motionFrame = undefined;
     };
 

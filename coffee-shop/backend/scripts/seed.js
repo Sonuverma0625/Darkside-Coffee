@@ -176,7 +176,7 @@ const seed = async () => {
   await Product.bulkWrite(
     products.map((product) => ({
       updateOne: {
-        filter: { sku: product.sku },
+        filter: { category: product.category, department: product.department },
         update: { $set: product },
         upsert: true
       }

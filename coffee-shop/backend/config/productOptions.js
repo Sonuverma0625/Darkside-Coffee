@@ -28,7 +28,17 @@ const COFFEE_CATEGORIES = [
   'Coconut Coffee',
   'Cinnamon Coffee',
   'Mint Coffee',
-  'Signature House Blend'
+  'Signature House Blend',
+  'Cortado',
+  'Ristretto',
+  'Doppio',
+  'Lungo',
+  'Cafe au Lait',
+  'Piccolo Latte',
+  'Spanish Latte',
+  'Vietnamese Iced Coffee',
+  'Cafe Bombon',
+  'Espresso Tonic'
 ];
 
 const NON_COFFEE_CATEGORIES = [

@@ -184,8 +184,21 @@ const buildFallbackOrderPreview = (db, body, user) => {
 const createDevFallbackRouter = () => {
   const router = express.Router();
   const db = loadDb();
-  if (!db.products?.length) db.products = buildProducts();
+  const catalogProducts = buildProducts();
+  const existingCatalogKeys = new Set(
+    (db.products || []).map((product) => `${product.department}:${product.category}`)
+  );
+  const missingProducts = catalogProducts.filter(
+    (product) => !existingCatalogKeys.has(`${product.department}:${product.category}`)
+  );
+
+  if (!db.products?.length) {
+    db.products = catalogProducts;
+  } else if (missingProducts.length) {
+    db.products.push(...missingProducts.map((product) => ({ ...product, _id: newId() })));
+  }
   ensureAdmin(db);
+  if (missingProducts.length) saveDb(db);
 
   const protect = (req, res, next) => {
     try {

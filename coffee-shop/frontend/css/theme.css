@@ -27,10 +27,8 @@
 
 body {
   background: linear-gradient(135deg, #fbf7f0 0%, #f2e6d7 48%, #f8f2e9 100%);
-  background-size: 180% 180%;
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   letter-spacing: 0;
-  animation: ambientBackground 18s ease-in-out infinite alternate;
 }
 
 h1,
@@ -53,10 +51,6 @@ p {
   color: var(--ink);
 }
 
-@keyframes ambientBackground {
-  from { background-position: 0% 40%; }
-  to { background-position: 100% 60%; }
-}
 
 /* Loader and navigation */
 .loader {
@@ -186,7 +180,7 @@ p {
 
 .hero-home {
   background-color: var(--espresso);
-  background-image: url("../images/hero-stage.png");
+  background-image: url("../images/hero-stage.webp");
   background-position: center 48%;
   background-size: cover;
   min-height: min(760px, calc(100svh - 112px));
@@ -402,8 +396,7 @@ p {
 }
 
 .metric-grid article {
-  background: rgba(255, 252, 247, 0.68);
-  backdrop-filter: blur(14px);
+  background: rgba(255, 252, 247, 0.86);
   box-shadow: var(--soft-shadow);
   transition: transform 0.24s ease, background 0.24s ease;
 }
@@ -423,10 +416,10 @@ p {
 }
 
 .product-card {
-  background: rgba(255, 252, 247, 0.82);
-  backdrop-filter: blur(16px);
+  background: rgba(255, 252, 247, 0.94);
   border-color: rgba(95, 59, 39, 0.12);
   box-shadow: var(--soft-shadow);
+  contain: layout paint;
   transform: translateZ(0);
   transition: transform 0.35s cubic-bezier(0.2, 0.72, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 }
@@ -496,8 +489,7 @@ p {
 .admin-form,
 .admin-tables section,
 .stat-card {
-  background: rgba(255, 252, 247, 0.78);
-  backdrop-filter: blur(16px);
+  background: rgba(255, 252, 247, 0.92);
   border-color: rgba(95, 59, 39, 0.13);
   box-shadow: var(--soft-shadow);
 }
@@ -766,7 +758,7 @@ tbody tr:hover {
 .reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.7s cubic-bezier(0.2, 0.72, 0.2, 1) var(--reveal-delay, 0ms), transform 0.7s cubic-bezier(0.2, 0.72, 0.2, 1) var(--reveal-delay, 0ms);
+  transition: opacity 0.55s cubic-bezier(0.2, 0.72, 0.2, 1) var(--reveal-delay, 0ms), transform 0.55s cubic-bezier(0.2, 0.72, 0.2, 1) var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
 
