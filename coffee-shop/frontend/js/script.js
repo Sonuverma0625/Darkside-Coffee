@@ -349,7 +349,7 @@
         motionFrame = undefined;
         return;
       }
-      const cupTravel = Math.min(heroHeight * 0.92, 620);
+      const cupTravel = Math.min(heroHeight * 0.64, 420);
 
       hero.style.setProperty('--cup-y', Math.round(progress * cupTravel) + 'px');
       hero.style.setProperty('--cup-rotate', (progress * 4.5).toFixed(2) + 'deg');
